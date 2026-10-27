@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bách Hóa Xanh - Siêu thị thực phẩm gia đình</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-top">
+      <div class="logo" onclick="showPage('home')">
+        <i class="fas fa-leaf"></i>
+        <span>Bách Hóa <strong>Xanh</strong></span>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm..." onkeyup="handleSearch(event)" />
+        <button onclick="performSearch()"><i class="fas fa-search"></i></button>
+      </div>
+
+      <div class="header-actions">
+        <div class="cart-icon" onclick="showPage('cart')">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+        <div class="user-icon" onclick="toggleUserMenu()">
+          <i class="fas fa-user"></i>
+          <span id="userName">Đăng nhập</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="container">
+        <ul class="nav-list">
+          <li onclick="showPage('home')"><i class="fas fa-home"></i> Trang chủ</li>
+          <li onclick="filterCategory('all')">Tất cả</li>
+          <li onclick="filterCategory('rau-cu')">Rau củ</li>
+          <li onclick="filterCategory('trai-cay')">Trái cây</li>
+          <li onclick="filterCategory('thit-ca')">Thịt cá</li>
+          <li onclick="filterCategory('sua')">Sữa & Đồ uống</li>
+          <li onclick="filterCategory('do-kho')">Đồ khô</li>
+          <li onclick="filterCategory('gia-vi')">Gia vị</li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- HOME PAGE -->
+    <section id="homePage" class="page active">
+      <!-- Banner -->
+      <div class="banner">
+        <div class="banner-slide active">
+          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&h=400&fit=crop" alt="Banner 1" />
+          <div class="banner-text">
+            <h2>Thực phẩm tươi mỗi ngày</h2>
+            <p>Giảm đến 30% cho đơn hàng đầu tiên</p>
+            <button onclick="filterCategory('all')">Mua ngay</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="container">
+        <h2 class="section-title">Danh mục sản phẩm</h2>
+        <div class="categories">
+          <div class="category-card" onclick="filterCategory('rau-cu')">
+            <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&h=200&fit=crop" alt="Rau củ" />
+            <span>Rau củ</span>
+          </div>
+          <div class="category-card" onclick="filterCategory('trai-cay')">
+            <img src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=200&h=200&fit=crop" alt="Trái cây" />
+            <span>Trái cây</span>
+          </div>
+          <div class="category-card" onclick="filterCategory('thit-ca')">
+            <img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=200&h=200&fit=crop" alt="Thịt cá" />
+            <span>Thịt cá</span>
+          </div>
+          <div class="category-card" onclick="filterCategory('sua')">
+            <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=200&h=200&fit=crop" alt="Sữa" />
+            <span>Sữa & Đồ uống</span>
+          </div>
+          <div class="category-card" onclick="filterCategory('do-kho')">
+            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&h=200&fit=crop" alt="Đồ khô" />
+            <span>Đồ khô</span>
+          </div>
+          <div class="category-card" onclick="filterCategory('gia-vi')">
+            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=200&h=200&fit=crop" alt="Gia vị" />
+            <span>Gia vị</span>
+          </div>
+        </div>
+
+        <!-- Featured Products -->
+        <h2 class="section-title">Sản phẩm nổi bật</h2>
+        <div class="products-grid" id="featuredProducts"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS PAGE -->
+    <section id="productsPage" class="page">
+      <div class="container">
+        <div class="products-header">
+          <h2 id="categoryTitle">Tất cả sản phẩm</h2>
+          <div class="sort-filter">
+            <select id="sortSelect" onchange="sortProducts()">
+              <option value="default">Sắp xếp</option>
+              <option value="price-asc">Giá tăng dần</option>
+              <option value="price-desc">Giá giảm dần</option>
+              <option value="name">Tên A-Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="products-grid" id="productsGrid"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCT DETAIL PAGE -->
+    <section id="detailPage" class="page">
+      <div class="container">
+        <div class="product-detail" id="productDetail"></div>
+      </div>
+    </section>
+
+    <!-- CART PAGE -->
+    <section id="cartPage" class="page">
+      <div class="container">
+        <h2 class="section-title">Giỏ hàng của bạn</h2>
+        <div id="cartContent">
+          <div class="empty-cart" id="emptyCart">
+            <i class="fas fa-shopping-basket"></i>
+            <p>Giỏ hàng trống</p>
+            <button onclick="showPage('home')">Tiếp tục mua sắm</button>
+          </div>
+          <div class="cart-items" id="cartItems"></div>
+          <div class="cart-summary" id="cartSummary" style="display:none;">
+            <div class="summary-row">
+              <span>Tạm tính:</span>
+              <span id="subtotal">0₫</span>
+            </div>
+            <div class="summary-row">
+              <span>Phí vận chuyển:</span>
+              <span id="shipping">30.000₫</span>
+            </div>
+            <div class="summary-row total">
+              <span>Tổng cộng:</span>
+              <span id="total">0₫</span>
+            </div>
+            <button class="checkout-btn" onclick="showPage('checkout')">Tiến hành thanh toán</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKOUT PAGE -->
+    <section id="checkoutPage" class="page">
+      <div class="container">
+        <h2 class="section-title">Thanh toán</h2>
+        <div class="checkout-form">
+          <div class="form-group">
+            <label>Họ và tên *</label>
+            <input type="text" id="customerName" placeholder="Nguyễn Văn A" required />
+          </div>
+          <div class="form-group">
+            <label>Số điện thoại *</label>
+            <input type="tel" id="customerPhone" placeholder="0912345678" required />
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ giao hàng *</label>
+            <textarea id="customerAddress" rows="3" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Phương thức thanh toán</label>
+            <select id="paymentMethod">
+              <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+              <option value="bank">Chuyển khoản ngân hàng</option>
+              <option value="momo">Ví MoMo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ghi chú</label>
+            <textarea id="orderNote" rows="2" placeholder="Ghi chú thêm cho đơn hàng..."></textarea>
+          </div>
+          <div class="order-summary">
+            <h3>Đơn hàng của bạn</h3>
+            <div id="checkoutItems"></div>
+            <div class="summary-row total">
+              <span>Tổng thanh toán:</span>
+              <span id="checkoutTotal">0₫</span>
+            </div>
+          </div>
+          <button class="checkout-btn" onclick="placeOrder()">Đặt hàng</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDER SUCCESS -->
+    <section id="successPage" class="page">
+      <div class="container">
+        <div class="success-box">
+          <i class="fas fa-check-circle"></i>
+          <h2>Đặt hàng thành công!</h2>
+          <p>Cảm ơn bạn đã mua sắm tại Bách Hóa Xanh.</p>
+          <p>Mã đơn hàng: <strong id="orderId"></strong></p>
+          <button onclick="showPage('home')">Về trang chủ</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>Bách Hóa Xanh</h3>
+          <p>Siêu thị thực phẩm tươi sống uy tín, chất lượng dành cho mọi gia đình Việt.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Liên hệ</h4>
+          <p><i class="fas fa-phone"></i> 1900 1234</p>
+          <p><i class="fas fa-envelope"></i> support@bachhoaxanh.vn</p>
+          <p><i class="fas fa-map-marker-alt"></i> TP. Hồ Chí Minh</p>
+        </div>
+        <div class="footer-col">
+          <h4>Hỗ trợ</h4>
+          <p>Chính sách đổi trả</p>
+          <p>Hướng dẫn mua hàng</p>
+          <p>Câu hỏi thường gặp</p>
+        </div>
+        <div class="footer-col">
+          <h4>Theo dõi</h4>
+          <div class="social">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-youtube"></i>
+            <i class="fab fa-tiktok"></i>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Bách Hóa Xanh. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
